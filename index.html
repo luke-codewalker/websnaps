@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Webcam</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script defer src="app.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <section class="stream">
+        <video class="stream video"></video>
+
+    </section>
+    <section class="snapshots"></section>
+    <canvas class="utility-canvas"></canvas>
+
+    <button class="snap-btn">Take a Snapshot</button>
+    <label for="mirror">Mirror</label>
+    <input type="checkbox" name="mirror" id="mirror">
+        <label for="filters">Filters</label>
+
+    <select name="filters" id="filters">
+        <option value="none" selected>None</option>
+        <option value="grayscale(100%)">Grayscale</option>
+        <option value="invert(100%)">Invert</option>
+        <option value="sepia(60%)">Retro</option>
+        <option value="contrast(200%)">High Contrast</option>
+        <option value="contrast(50%)">Low Contrast</option>
+    </select>
+</body>
+
+</html>
