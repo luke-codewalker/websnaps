@@ -3,9 +3,6 @@ const snapshots = document.querySelector(".snapshots");
 const filters = document.querySelector("#filters");
 const mirror = document.querySelector("#mirror");
 
-const canvas = document.querySelector(".utility-canvas");
-const context = canvas.getContext("2d");
-
 const snapBtn = document.querySelector(".snap-btn");
 let frontCam = false;
 let mirrored = mirror.checked ? -1 : 1;
@@ -17,20 +14,24 @@ video.style.filter = filter;
 startStreamingCamera({ video: { facingMode: "user" } });
 
 snapBtn.addEventListener("click", e => {
+  const canvas = document.createElement("canvas");
   canvas.width = video.videoWidth;
   canvas.height = video.videoHeight;
-  context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-  const imgUrl = canvas.toDataURL("image/png");
+  const context = canvas.getContext("2d");
+  context.filter = filter;
+  context.scale(mirrored, 1);
+  context.drawImage(
+    video,
+    -canvas.width / 2 + (canvas.width / 2) * mirrored,
+    0,
+    canvas.width,
+    canvas.height
+  );
 
-  const img = document.createElement("img");
-  img.src = imgUrl;
-  img.style.filter = filter;
-  img.style.transform = `scaleX(${mirrored})`;
+  canvas.addEventListener("click", downloadImg);
 
-  img.addEventListener("click", downloadImg);
-
-  snapshots.appendChild(img);
+  snapshots.appendChild(canvas);
 });
 
 filters.addEventListener("change", e => {
@@ -68,7 +69,7 @@ function downloadImg(e) {
     "position:absolute; transform:translateY(-10000px);"
   );
   link.setAttribute("download", `snapshot-${Date.now()}.png`);
-  link.setAttribute("href", e.target.src);
+  link.setAttribute("href", e.target.toDataURL("image/png"));
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
