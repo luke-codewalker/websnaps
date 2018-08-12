@@ -69,7 +69,6 @@ function startStreamingCamera(constraints) {
     .getUserMedia(constraints)
     .then(mediaStream => {
       video.pause();
-      console.log(mediaStream);
       video.srcObject = mediaStream;
       video.load();
 
