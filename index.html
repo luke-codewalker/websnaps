@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Webcam</title>
+    <title>Websnaps</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script defer src="app.js"></script>
     <link rel="stylesheet" href="style.css">
@@ -12,24 +12,27 @@
 
 <body>
     <main class="app">
-        <video class="video"></video>
+        <video class="video" title="Click to take a snap!"></video>
         <menu class="options">
-            <button class="snap-btn">Take a Snapshot in
-                <span class="countdown"></span>secs</button>
-            <input type="checkbox" name="mirror" id="mirror">
-            <label for="mirror">Mirror mode</label>
+            <button class="btn trigger-btn" title="Take a snapshot after 3 secs">
+                <span class="camera-icon">📷</span>
+                <span class="countdown"></span> secs</button>
 
-            <label for="filters">Filters</label>
-            <select name="filters" id="filters">
-                <option value="none" selected>None</option>
+            <label class="btn mirror-btn" title="Display webcam feed as mirror image" for="mirror">
+                <input type="checkbox" class="mirror-btn-input" name="mirror" id="mirror"> Mirror mode</label>
+
+            <select class="btn filter-select" title="Select a filter effect" name="filters" id="filters">
+                <option value="none" selected>No filter</option>
                 <option value="grayscale(100%)">Grayscale</option>
                 <option value="invert(100%)">Invert</option>
                 <option value="sepia(60%)">Retro</option>
                 <option value="contrast(200%)">High Contrast</option>
                 <option value="contrast(50%)">Low Contrast</option>
             </select>
+
         </menu>
-        <section class="snapshots"></section>
+        <section class="snapshots" title="CLICK on the camera feed, press the SPACEBAR or use the DELAY BUTTON to take a snapshot!"
+            data-usage-hint="ℹ Hover or tap a snapshot to download or delete it"></section>
     </main>
 
 

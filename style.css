@@ -27,17 +27,77 @@ body {
   background-color: #000;
 }
 
+.options {
+  margin: 0;
+  padding: 0.5rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.btn {
+  border: 2px solid #333;
+  border-radius: 3px;
+  background-color: transparent;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  text-align: center;
+  padding: 0 0.5rem;
+  margin: 0 0.25rem;
+}
+
+.btn.inactive,
+.btn[disabled] {
+  border-color: #aaa;
+  color: #aaa;
+}
+.trigger-btn[disabled] {
+  color: #000;
+}
+
+.trigger-btn[disabled] .camera-icon {
+  opacity: 0.5;
+}
+
+.mirror-btn-input {
+  display: none;
+}
+
 .snapshots {
   width: 100%;
   max-width: 1000px;
+  min-height: 25vh;
   display: flex;
-  flex-wrap: wrap;
+  flex-flow: row wrap;
   justify-content: flex-start;
+  align-items: flex-start;
+  position: relative;
+}
+
+.snapshots:empty::before {
+  content: attr(title);
+  color: #aaa;
+  text-align: center;
+  margin: 0 auto;
+  font-size: 1.25rem;
+  padding-top: 1rem;
+}
+
+.snapshots:not(:empty)::before {
+  content: attr(data-usage-hint);
+  color: #000;
+  width: 100%;
+  text-align: center;
+  position: relative;
+
+  font-size: 0.75rem;
+  padding: 0.25rem 0;
 }
 
 .snapshot-wrapper {
   width: 45%;
-  margin: 2.5%;
+  margin: 0 2.5% 2.5% 2.5%;
   position: relative;
   overflow: hidden;
 }
@@ -63,14 +123,14 @@ body {
   left: 0;
 }
 
-.focused .btn {
+.focused .snap-btn {
   position: absolute;
   z-index: 2;
   transform: translateY(0);
   transition: transform 0.25s;
 }
 
-.btn {
+.snap-btn {
   position: absolute;
   cursor: pointer;
   transform: translateY(-50px);
@@ -102,7 +162,11 @@ body {
 @media (min-width: 720px) {
   .snapshot-wrapper {
     width: 20%;
-    margin: 2.5%;
+    margin: 0 2.5% 2.5% 2.5%;
     cursor: pointer;
+  }
+
+  .btn {
+    font-size: 1.25rem;
   }
 }

@@ -1,11 +1,14 @@
 const video = document.querySelector(".video");
 const snapshots = document.querySelector(".snapshots");
-const filters = document.querySelector("#filters");
-const mirror = document.querySelector("#mirror");
+const filters = document.querySelector(".filter-select");
+const mirrorBtnInput = document.querySelector(".mirror-btn-input");
+const mirrorBtn = document.querySelector(".mirror-btn");
 
-const snapBtn = document.querySelector(".snap-btn");
-let frontCam = false;
-let mirrored = mirror.checked ? -1 : 1;
+const trigger = document.querySelector(".trigger-btn");
+let mirrored = mirrorBtnInput.checked ? -1 : 1;
+mirrorBtnInput.checked
+  ? mirrorBtn.classList.remove("inactive")
+  : mirrorBtn.classList.add("inactive");
 let filter = filters.value;
 
 const countdown = document.querySelector(".countdown");
@@ -15,7 +18,13 @@ countdown.textContent = secs;
 video.style.transform = `scaleX(${mirrored})`;
 video.style.filter = filter;
 
-startStreamingCamera({ video: { facingMode: "user" } });
+startStreamingCamera({
+  video: {
+    width: { ideal: 1280 },
+    height: { ideal: 1024 },
+    facingMode: "user"
+  }
+});
 
 video.addEventListener("click", takeSnapshot);
 
@@ -26,15 +35,15 @@ window.addEventListener("keydown", e => {
   }
 });
 
-snapBtn.addEventListener("click", () => {
-  snapBtn.setAttribute("disabled", "");
+trigger.addEventListener("click", () => {
+  trigger.setAttribute("disabled", "");
 
   const intervalID = setInterval(() => {
     countdown.textContent = --secs;
   }, 1000);
 
   setTimeout(() => {
-    snapBtn.removeAttribute("disabled", "");
+    trigger.removeAttribute("disabled", "");
     secs = 3;
     countdown.textContent = secs;
     clearInterval(intervalID);
@@ -47,8 +56,11 @@ filters.addEventListener("change", e => {
   video.style.filter = filter;
 });
 
-mirror.addEventListener("change", e => {
+mirrorBtnInput.addEventListener("change", e => {
   mirrored = e.target.checked ? -1 : 1;
+  mirrorBtnInput.checked
+    ? mirrorBtn.classList.remove("inactive")
+    : mirrorBtn.classList.add("inactive");
   video.style.transform = `scaleX(${mirrored})`;
 });
 
@@ -57,7 +69,7 @@ function startStreamingCamera(constraints) {
     .getUserMedia(constraints)
     .then(mediaStream => {
       video.pause();
-
+      console.log(mediaStream);
       video.srcObject = mediaStream;
       video.load();
 
@@ -92,7 +104,7 @@ function takeSnapshot() {
   const deleteBtn = document.createElement("button");
   deleteBtn.innerHTML = "&times;";
   deleteBtn.setAttribute("title", "Delete this snap!");
-  deleteBtn.classList.add("delete-btn", "btn");
+  deleteBtn.classList.add("delete-btn", "snap-btn");
   deleteBtn.addEventListener("click", e => {
     e.target.parentNode.parentNode.removeChild(e.target.parentNode);
   });
@@ -100,7 +112,7 @@ function takeSnapshot() {
   const downloadBtn = document.createElement("button");
   downloadBtn.innerHTML = "💾";
   downloadBtn.setAttribute("title", "Download this snap!");
-  downloadBtn.classList.add("download-btn", "btn");
+  downloadBtn.classList.add("download-btn", "snap-btn");
   downloadBtn.addEventListener("click", e =>
     downloadImg(e.target.parentNode.querySelector("canvas"))
   );
