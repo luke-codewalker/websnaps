@@ -1,22 +1,24 @@
+// DOM hooks
 const video = document.querySelector(".video");
 const snapshots = document.querySelector(".snapshots");
 const filters = document.querySelector(".filter-select");
 const mirrorBtnInput = document.querySelector(".mirror-btn-input");
 const mirrorBtn = document.querySelector(".mirror-btn");
-
 const trigger = document.querySelector(".trigger-btn");
+const countdown = document.querySelector(".countdown");
+
+// Initial setup
 let mirrored = mirrorBtnInput.checked ? -1 : 1;
 mirrorBtnInput.checked
   ? mirrorBtn.classList.remove("inactive")
   : mirrorBtn.classList.add("inactive");
-let filter = filters.value;
+video.style.transform = `scaleX(${mirrored})`;
 
-const countdown = document.querySelector(".countdown");
+let filter = filters.value;
+video.style.filter = filter;
+
 let secs = 3;
 countdown.textContent = secs;
-
-video.style.transform = `scaleX(${mirrored})`;
-video.style.filter = filter;
 
 startStreamingCamera({
   video: {
@@ -26,6 +28,8 @@ startStreamingCamera({
   }
 });
 
+// Event Listeners
+// taking a snapshot immediately
 video.addEventListener("click", takeSnapshot);
 
 window.addEventListener("keydown", e => {
@@ -35,6 +39,7 @@ window.addEventListener("keydown", e => {
   }
 });
 
+// taking a snapshot with delay
 trigger.addEventListener("click", () => {
   trigger.setAttribute("disabled", "");
 
@@ -51,11 +56,13 @@ trigger.addEventListener("click", () => {
   }, secs * 1000);
 });
 
+// change filter
 filters.addEventListener("change", e => {
   filter = e.target.value;
   video.style.filter = filter;
 });
 
+// change mirrored status
 mirrorBtnInput.addEventListener("change", e => {
   mirrored = e.target.checked ? -1 : 1;
   mirrorBtnInput.checked
@@ -64,6 +71,8 @@ mirrorBtnInput.addEventListener("change", e => {
   video.style.transform = `scaleX(${mirrored})`;
 });
 
+// functions
+// function to request camera stream
 function startStreamingCamera(constraints) {
   navigator.mediaDevices
     .getUserMedia(constraints)
@@ -81,8 +90,12 @@ function startStreamingCamera(constraints) {
     });
 }
 
+// function to record a snapshot
 function takeSnapshot() {
+  // create a canvas and put image with all manipulations applied on it
   const canvas = document.createElement("canvas");
+  canvas.classList.add("snapshot");
+
   canvas.width = video.videoWidth;
   canvas.height = video.videoHeight;
 
@@ -97,40 +110,59 @@ function takeSnapshot() {
     canvas.height
   );
 
-  canvas.classList.add("snapshot");
-  const wrapper = document.createElement("div");
+  // create wrapper element for canvas and buttons for downloading and deleting
+  const wrapper = makeSnapshotWrapper();
+  const deleteBtn = makeDeleteBtn();
+  const downloadBtn = makeDownloadBtn();
 
-  const deleteBtn = document.createElement("button");
-  deleteBtn.innerHTML = "&times;";
-  deleteBtn.setAttribute("title", "Delete this snap!");
-  deleteBtn.classList.add("delete-btn", "snap-btn");
-  deleteBtn.addEventListener("click", e => {
-    e.target.parentNode.parentNode.removeChild(e.target.parentNode);
-  });
-
-  const downloadBtn = document.createElement("button");
-  downloadBtn.innerHTML = "💾";
-  downloadBtn.setAttribute("title", "Download this snap!");
-  downloadBtn.classList.add("download-btn", "snap-btn");
-  downloadBtn.addEventListener("click", e =>
-    downloadImg(e.target.parentNode.querySelector("canvas"))
-  );
-
-  wrapper.addEventListener("mouseenter", () =>
-    wrapper.classList.add("focused")
-  );
-
-  wrapper.addEventListener("click", () => wrapper.classList.add("focused"));
-  wrapper.addEventListener("mouseleave", () =>
-    wrapper.classList.remove("focused")
-  );
-  wrapper.classList.add("snapshot-wrapper");
+  // insert into DOM
   wrapper.appendChild(canvas);
   wrapper.appendChild(deleteBtn);
   wrapper.appendChild(downloadBtn);
   snapshots.appendChild(wrapper);
 }
 
+// function to create a wrapper div for the snapshots and the buttons
+function makeSnapshotWrapper() {
+  const wrapper = document.createElement("div");
+  wrapper.classList.add("snapshot-wrapper");
+
+  // events on wrapper for hover on desktop and touch on mobile
+  wrapper.addEventListener("mouseenter", () =>
+    wrapper.classList.add("focused")
+  );
+  wrapper.addEventListener("click", () => wrapper.classList.add("focused"));
+  wrapper.addEventListener("mouseleave", () =>
+    wrapper.classList.remove("focused")
+  );
+  return wrapper;
+}
+
+//function to create delete button for snapshot
+function makeDeleteBtn() {
+  const btn = document.createElement("button");
+  btn.innerHTML = "&times;";
+  btn.setAttribute("title", "Delete this snap!");
+  btn.classList.add("delete-btn", "snap-btn");
+  btn.addEventListener("click", e => {
+    e.target.parentNode.parentNode.removeChild(e.target.parentNode);
+  });
+  return btn;
+}
+
+//function to create download button for snapshot
+function makeDownloadBtn() {
+  const btn = document.createElement("button");
+  btn.innerHTML = "💾";
+  btn.setAttribute("title", "Download this snap!");
+  btn.classList.add("download-btn", "snap-btn");
+  btn.addEventListener("click", e =>
+    downloadImg(e.target.parentNode.querySelector("canvas"))
+  );
+  return btn;
+}
+
+// function to download an image
 function downloadImg(canvas) {
   const link = document.createElement("a");
   link.setAttribute(
