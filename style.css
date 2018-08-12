@@ -159,6 +159,13 @@ body {
   padding: 0;
 }
 
+/* Footer */
+.footer {
+  width: 100%;
+  text-align: center;
+}
+
+/* Media query for larger screens */
 @media (min-width: 720px) {
   .snapshot-wrapper {
     width: 20%;
