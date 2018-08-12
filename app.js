@@ -169,7 +169,10 @@ function downloadImg(canvas) {
     "style",
     "position:absolute; transform:translateY(-10000px);"
   );
-  link.setAttribute("download", `snapshot-${Date.now()}.png`);
+  const now = new Date();
+  const timeString = `${now.getDate()}-${now.getMonth() +
+    1}-${now.getFullYear()}_${now.getHours()}-${now.getMinutes()}-${now.getSeconds()}`;
+  link.setAttribute("download", `websnap_${timeString}.png`);
   link.setAttribute("href", canvas.toDataURL("image/png"));
   document.body.appendChild(link);
   link.click();
