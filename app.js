@@ -92,6 +92,11 @@ function startStreamingCamera(constraints) {
 
 // function to record a snapshot
 function takeSnapshot() {
+  video.classList.add("flash");
+  setTimeout(() => {
+    video.classList.remove("flash");
+  }, 500);
+
   // create a canvas and put image with all manipulations applied on it
   const canvas = document.createElement("canvas");
   canvas.classList.add("snapshot");

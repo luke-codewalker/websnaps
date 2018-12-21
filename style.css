@@ -29,6 +29,21 @@ body {
   background-color: #000;
 }
 
+video.flash {
+  animation: flash 0.5s;
+}
+
+@keyframes flash {
+  0% {
+  opacity: 0.25;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+
 .options {
   margin: 0;
   padding: 0.5rem;
