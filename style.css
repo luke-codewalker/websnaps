@@ -82,7 +82,7 @@ body {
 }
 
 .snapshots:empty::before {
-  content: attr(title);
+  content: attr(data-trigger-hint);
   color: #aaa;
   text-align: center;
   margin: 0 auto;
