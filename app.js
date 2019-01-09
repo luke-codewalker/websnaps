@@ -174,20 +174,31 @@ function downloadImg(canvas) {
     "style",
     "position:absolute; transform:translateY(-10000px);"
   );
-  const now = new Date();
-  const timeString = `${(now.getDate() + "").padStart(2, "0")}-${(
-    now.getMonth() +
-    1 +
-    ""
-  ).padStart(2, "0")}-${now.getFullYear()}_${(now.getHours() + "").padStart(
-    2,
-    "0"
-  )}-${(now.getMinutes() + "").padStart(2, "0")}-${(
-    now.getSeconds() + ""
-  ).padStart(2, "0")}`;
+
+  const timeString = dateToString(new Date());
   link.setAttribute("download", `websnap_${timeString}.png`);
   link.setAttribute("href", canvas.toDataURL("image/png"));
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
+}
+
+// helper function to pad with leading zeroes
+function pad(str) {
+  return str.padStart(2, "0");
+}
+
+// function to make string from a date
+function dateToString(date) {
+  // add empty string to convert Number to String for padding
+  const day = date.getDate() + "";
+  const month = date.getMonth() + 1 + "";
+  const year = date.getFullYear();
+  const hour = date.getHours() + "";
+  const minute = date.getMinutes() + "";
+  const second = date.getSeconds() + "";
+
+  return `${pad(day)}-${pad(month)}-${year}_${pad(hour)}-${pad(minute)}-${pad(
+    second
+  )}`;
 }
